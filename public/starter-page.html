@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>DermaGuide – AI Skin Analyzer</title>
+
+  <!-- Favicons -->
+  <link href="assets/img/favicon.png" rel="icon">
+
+  <!-- Vendor CSS Files -->
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+  <!-- Custom CSS -->
+  <link href="assets/css/ai-analyzer.css" rel="stylesheet">
+
+  <!-- Force visible content (important fix) -->
+  <style>
+    section, .section, #skin-analyzer {
+      display: block !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+      transform: none !important;
+      position: relative !important;
+      z-index: 2 !important;
+    }
+    [data-aos] {
+      opacity: 1 !important;
+      transform: none !important;
+      transition: none !important;
+    }
+    .page-title {
+      z-index: 1 !important;
+    }
+    #resultSection, #aiResult {
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+  </style>
+</head>
+
+<body>
+
+  <!-- ======= Header ======= -->
+  <header id="header" class="header fixed-top bg-white shadow-sm">
+    <div class="container d-flex justify-content-between align-items-center">
+      <!-- <a href="index.html" class="logo text-decoration-none">
+        <h1 class="text-primary">DermaGuide</h1>
+      </a> -->
+      <nav class="nav">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="service-details.html" class="nav-link">Services</a>
+         <a href="blog.html" class="nav-link">Skin Care Tips</a>
+        <!-- <a href="starter-page.html" class="nav-link active">AI Analyzer</a> -->
+        <!-- <a href="contact.html" class="nav-link">Contact</a> -->
+      </nav>
+    </div>
+  </header>
+
+  <main class="main" style="margin-top:32px;">
+
+    <!-- ===== Hero Section ===== -->
+    <section id="hero" class="hero text-center text-white d-flex align-items-center justify-content-center" style="background: linear-gradient(135deg, #0d6efd, #007bff); height: 70vh;">
+      <div class="container">
+        <h1 class="fw-bold display-4 mb-3">AI-Powered Skin Analyzer</h1>
+        <p class="lead mb-4">Understand your skin and get personalized skincare advice in seconds.</p>
+        <a href="#skin-analyzer" class="btn btn-light btn-lg">Start Quiz</a>
+      </div>
+    </section>
+
+    <!-- ===== Quiz Section ===== -->
+    <section id="skin-analyzer" class="py-5 bg-light">
+      <div class="container">
+        <div class="text-center mb-5">
+          <h2 class="fw-bold text-primary">Skin Concern Detection</h2>
+          <p class="text-muted">Get smart recommendations for your unique skin type.</p>
+        </div>
+
+        <!-- Form -->
+        <form id="skinForm" class="p-4 shadow-lg rounded bg-white mx-auto" style="max-width:600px;">
+          <div class="mb-3">
+            <label for="skinType" class="form-label fw-semibold">Select your skin type:</label>
+            <select id="skinType" class="form-select" required>
+              <option value="">Choose...</option>
+              <option value="Oily">Oily</option>
+              <option value="Dry">Dry</option>
+              <option value="Combination">Combination</option>
+              <option value="Normal">Normal</option>
+              <option value="Sensitive">Sensitive</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="skinConcern" class="form-label fw-semibold">Main skin concern:</label>
+            <select id="skinConcern" class="form-select" required>
+              <!-- <option value="">Choose...</option> -->
+                <option value="None" selected>Choose your concern...</option>
+              <option value="Acne">Acne</option>
+              <option value="Pigmentation">Pigmentation</option>
+              <option value="Wrinkles">Wrinkles / Aging</option>
+              <option value="Dullness">Dullness</option>
+              <option value="Dark Spots">Dark Spots</option>
+            </select>
+          </div>
+
+          <div class="text-center">
+            <button type="submit" class="btn btn-primary px-4 py-2">Analyze My Skin</button>
+          </div>
+        </form>
+
+        <!-- AI Result -->
+        <div id="resultSection" class="mt-5 text-center" style="display:none;">
+          <h4 class="text-success mb-3"></h4>
+          <div id="aiResult" class="p-3 bg-white border rounded shadow-sm"></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===== Footer ===== -->
+  <footer id="footer" class="footer text-light" style="background: linear-gradient(135deg, #0b0f1a, #1b2233); color: #e8f0f8; padding: 60px 0 30px 0;">
+
+  <div class="container footer-top">
+    <div class="row gy-4">
+      
+      <!-- About Section -->
+      <div class="col-lg-4 col-md-6 footer-about">
+        <a href="index.html" class="logo d-flex align-items-center mb-3 text-decoration-none">
+          <span class="sitename fw-bold" style="font-size: 1.6rem; color: #4dd0e1;">DermaGuide AI</span>
+        </a>
+        <p>
+          DermaGuide AI empowers users with intelligent skincare insights.  
+          From analyzing your skin type to recommending the perfect products —  
+          your skincare routine is now smarter, faster, and more personal.
+        </p>
+
+        <div class="footer-contact pt-3">
+          <p><strong>Address:</strong> GlowTech Labs, Wellness City</p>
+          <p><strong>Phone:</strong> +91 98012 34567</p>
+          <p><strong>Email:</strong> ai-support@dermaguide.ai</p>
+        </div>
+
+        <div class="social-links d-flex mt-3">
+          <a href="#" class="me-3 text-info"><i class="bi bi-linkedin"></i></a>
+          <a href="#" class="me-3 text-info"><i class="bi bi-twitter-x"></i></a>
+          <a href="#" class="me-3 text-info"><i class="bi bi-instagram"></i></a>
+        </div>
+      </div>
+
+      <!-- Quick Access -->
+      <div class="col-lg-3 col-md-6 footer-links">
+        <h4 class="fw-semibold text-info mb-3">Quick Access</h4>
+        <ul class="list-unstyled">
+          <li><a href="index.html" class="text-light text-decoration-none">Home</a></li>
+          <li><a href="service-details.html" class="text-light text-decoration-none">Services</a></li>
+          <li><a href="starter-page.html" class="text-light text-decoration-none">AI Analyzer</a></li>
+          <li><a href="portfolio-details.html" class="text-light text-decoration-none">Products</a></li>
+          <li><a href="contact.html" class="text-light text-decoration-none">Contact</a></li>
+        </ul>
+      </div>
+
+      <!-- AI Features -->
+      <div class="col-lg-3 col-md-6 footer-links">
+        <h4 class="fw-semibold text-info mb-3">AI Features</h4>
+        <ul class="list-unstyled">
+          <li><a href="starter-page.html" class="text-light text-decoration-none">Skin Concern Detection</a></li>
+          <li><a href="service-details.html" class="text-light text-decoration-none">Smart Routine Builder</a></li>
+          <li><a href="portfolio-details.html" class="text-light text-decoration-none">Product Recommendations</a></li>
+        </ul>
+      </div>
+
+      <!-- Newsletter -->
+      <div class="col-lg-2 col-md-6 footer-newsletter">
+        <h4 class="fw-semibold text-info mb-3">Stay in Touch</h4>
+        <p>Join our AI skincare community to receive personalized care updates.</p>
+        <form action="#" method="post" class="php-email-form mt-3">
+          <div class="d-flex flex-column gap-2">
+            <input type="email" name="email" class="form-control" placeholder="Your Email" required>
+            <button type="submit" class="btn btn-info text-white">Subscribe</button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Copyright -->
+  <div class="container text-center mt-5">
+    <p class="mb-0">© 2025 <strong class="text-info">DermaGuide AI</strong> | Intelligent Skincare Solutions</p>
+    <small class="text-muted">Designed by <span style="color:#4dd0e1;">Aka</span></small>
+  </div>
+
+</footer>
+
+
+  <!-- Vendor JS -->
+  <!-- <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/aos/aos.js"></script>
+  <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="assets/vendor/swiper/swiper-bundle.min.js"></script> -->
+
+  <!-- Main JS -->
+  <!-- <script src="assets/js/main.js"></script> -->
+   <!-- Vendor JS Files -->
+<script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="assets/vendor/aos/aos.js"></script>
+<script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
+<script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+
+<!-- Your AI Analyzer Logic (main.js) -->
+<script src="assets/js/starter.js" defer></script>
+
+
+</body>
+</html>

@@ -1,0 +1,100 @@
+body {
+  background-color: #f8f9fa;
+  font-family: "Poppins", sans-serif;
+}
+
+#skinForm {
+  transition: all 0.3s ease;
+}
+
+#skinForm:hover {
+  transform: scale(1.02);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+#aiResult ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+#aiResult li {
+  background-color: white;
+  border: 1px solid #dee2e6;
+  border-radius: 5px;
+  margin: 8px 0;
+  padding: 10px;
+}
+/* //////////footer */
+.footer a:hover {
+  color: #4dd0e1 !important;
+  transition: 0.3s ease;
+}
+
+.footer h4 {
+  font-size: 1.1rem;
+}
+
+.footer .btn-info {
+  background: linear-gradient(135deg, #0dcaf0, #007bff);
+  border: none;
+  font-weight: 500;
+}
+
+.footer .btn-info:hover {
+  background: linear-gradient(135deg, #007bff, #0dcaf0);
+}
+
+.footer input[type="email"] {
+  background: #1b2333;
+  border: 1px solid #3c4a65;
+  color: #e0e0e0;
+}
+/* //////////////////////////// */
+/* Hero Section */
+#hero {
+  background: linear-gradient(135deg, #0d6efd, #007bff);
+  color: white;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+}
+
+/* Form Styling */
+#skinForm {
+  transition: all 0.3s ease;
+}
+
+#skinForm select, #skinForm button {
+  border-radius: 8px;
+}
+
+#skinForm button {
+  background: linear-gradient(90deg, #007bff, #00c6ff);
+  border: none;
+  transition: 0.3s ease;
+}
+#skinForm button:hover {
+  background: linear-gradient(90deg, #00c6ff, #007bff);
+}
+
+/* Product Cards */
+.hover-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.hover-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2);
+}
+.card-title {
+  font-weight: 600;
+}
+.card-body {
+  text-align: center;
+}

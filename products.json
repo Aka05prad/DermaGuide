@@ -1,0 +1,82 @@
+[
+  {
+    "id": "p1",
+    "name": "Neutrogena Hydro Boost Water Gel",
+    "category": "skincare",
+    "skinType": ["dry", "normal"],
+    "concerns": ["dehydration", "dullness"],
+    "description": "Lightweight hyaluronic acid moisturizer for hydration.",
+    "image": "assets/img/products/neutrogena-gel.jpg",
+    "buy_link": "https://www.amazon.in/Neutrogena-Hydro-Boost-Water-Blue/dp/B00BQFTQW6"
+  },
+  {
+    "id": "p2",
+    "name": "CeraVe Foaming Cleanser",
+    "category": "skincare",
+    "skinType": ["oily", "combination"],
+    "concerns": ["acne", "oiliness"],
+    "description": "Gentle cleanser with ceramides and niacinamide.",
+    "image": "assets/img/products/cerave-foam.jpg",
+    "buy_link": "https://www.amazon.in/CeraVe-Foaming-Cleanser-Normal-Dermatologist-Developed/dp/B07C5SKVL7?source=ps-sl-shoppingads-lpcontext&ref_=fplfs&smid=A15APWRK6P7LBV&th=1"
+  },
+  {
+    "id": "p3",
+    "name": "La Roche-Posay Effaclar Duo (Acne Treatment)",
+    "category": "medicated",
+    "skinType": ["oily", "acne-prone"],
+    "concerns": ["acne", "pimple"],
+    "description": "Targets blemishes & prevents new breakouts.",
+    "image": "assets/img/products/effaclar.jpg",
+    "buy_link": "https://www.amazon.in/Roche-Posay-Effaclar-Corrective-Unclogging-Care/dp/B07DM1XWHL?source=ps-sl-shoppingads-lpcontext&ref_=fplfs&psc=1&smid=A6MLAA7RWFSNJ"
+  },
+  {
+    "id": "p4",
+    "name": "Vaseline Intensive Care Body Lotion",
+    "category": "bodycare",
+    "skinType": ["dry", "normal"],
+    "concerns": ["dryness", "flakiness"],
+    "description": "Deeply nourishing body lotion.",
+    "image": "assets/img/products/vaseline-lotion.jpg",
+    "buy_link": "https://www.amazon.in/Vaseline-Intensive-Care-Cocoa-Lotion/dp/B07BVXBSSD?th=1"
+  },
+  {
+    "id": "p5",
+    "name": "The Ordinary Niacinamide 10% + Zinc 1%",
+    "category": "serum",
+    "skinType": ["oily", "combination"],
+    "concerns": ["acne", "dark spots", "pigmentation"],
+    "description": "Reduces blemishes, congestion, and evens out skin tone.",
+    "image": "assets/img/products/ordinary-niacinamide.jpg",
+    "buy_link": "https://www.nykaaman.com/the-ordinary-niacinamide-10percent-zinc-1percent/p/15707745?ptype=product&skuId=5003164&utm_content=ads&utm_source=GooglePaid&utm_medium=SSC&utm_campaign=SSC_TopBrandsSkin_250925&gad_source=1&gad_campaignid=23052882194&gbraid=0AAAAAC969uv3nhXFXYVPCGFCvsRjnZwI4&gclid=CjwKCAiAoNbIBhB5EiwAZFbYGNB_hOCkN711R3HfNYXzhnNnPHPxS5LC0Qr4gyyPeccMFUTGs8zoLRoC6D4QAvD_BwE"
+  },
+  {
+    "id": "p6",
+    "name": "Minimalist Vitamin C 10% Serum",
+    "category": "serum",
+    "skinType": ["normal", "dry", "combination"],
+    "concerns": ["dullness", "pigmentation", "uneven tone"],
+    "description": "Brightens skin, reduces spots, and boosts collagen.",
+    "image": "assets/img/products/minimalist-vitamin-c.jpg",
+    "buy_link": "https://www.amazon.in/Minimalist-Formulated-Sensitive-Irritating-Brightening/dp/B0CW1M1BC1/ref=asc_df_B0CW1M1BC1?mcid=b76ce84b8aca3b52b00cfad4f5aa0528&tag=googleshopdes-21&linkCode=df0&hvadid=709857154035&hvpos=&hvnetw=g&hvrand=11370412552640266757&hvpone=&hvptwo=&hvqmt=&hvdev=c&hvdvcmdl=&hvlocint=&hvlocphy=1007799&hvtargid=pla-2283290480059&gad_source=1&th=1"
+  },
+  {
+    "id": "p7",
+    "name": "Cetaphil Gentle Skin Cleanser",
+    "category": "cleanser",
+    "skinType": ["dry", "sensitive"],
+    "concerns": ["dryness", "irritation"],
+    "description": "Soap-free, gentle cleanser ideal for sensitive skin.",
+    "image": "assets/img/products/cetaphil-cleanser.jpg",
+    "buy_link": "https://www.amazon.in/Cetaphil-Sulphate-Free-Hydrating-Niacinamide-Sensitive/dp/B01CCGW4OE/ref=asc_df_B01CCGW4OE?mcid=2ac139f902833125bb8121f50c624656&tag=googleshopdes-21&linkCode=df0&hvadid=710025356537&hvpos=&hvnetw=g&hvrand=456767291076223764&hvpone=&hvptwo=&hvqmt=&hvdev=c&hvdvcmdl=&hvlocint=&hvlocphy=1007799&hvtargid=pla-335129090304&gad_source=1&th=1"
+  },
+  {
+    "id": "p8",
+    "name": "COSRX Snail Mucin Essence",
+    "category": "essence",
+    "skinType": ["dry", "normal"],
+    "concerns": ["dullness", "wrinkles", "hydration"],
+    "description": "Hydrating and repairing essence with 96% snail secretion filtrate.",
+    "image": "assets/img/products/cosrx-snail-essence.jpg",
+    "buy_link": "https://www.tatacliq.com/cosrx-advanced-snail-96-mucin-power-essence---100-ml/p-mp000000026500986?cid=ps:Mall_Google_Perf_Shopping_HM_22698541652_Kindlife_Cosrx&gad_source=4&gad_campaignid=22698541652&gbraid=0AAAAADeBiBzkrK0v84nfmJJAB_TIhU7jh&gclid=CjwKCAiAoNbIBhB5EiwAZFbYGIMKkLGNgghw9BpOEw_CtC2CixkXwQcUTCyJd4dA5RqYfB72W7iw-BoCAqgQAvD_BwE"
+  }
+]
