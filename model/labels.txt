@@ -1,0 +1,5 @@
+0 acne
+1 acne_scar
+2 oiliness
+3 clear
+4 pigmentation

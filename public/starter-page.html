@@ -2,221 +2,414 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>DermaGuide – AI Skin Analyzer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DermaGuide — AI Skin Analyzer</title>
+  <meta name="description" content="Take the DermaGuide AI skin quiz or upload your face photo for CNN-powered skin analysis.">
 
-  <!-- Favicons -->
   <link href="assets/img/favicon.png" rel="icon">
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
 
-  <!-- Vendor CSS Files -->
   <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
   <link href="assets/vendor/aos/aos.css" rel="stylesheet">
-  <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
-  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
-
-  <!-- Custom CSS -->
+  <link href="assets/css/main.css" rel="stylesheet">
   <link href="assets/css/ai-analyzer.css" rel="stylesheet">
 
-  <!-- Force visible content (important fix) -->
   <style>
-    section, .section, #skin-analyzer {
-      display: block !important;
-      opacity: 1 !important;
-      visibility: visible !important;
-      transform: none !important;
-      position: relative !important;
-      z-index: 2 !important;
-    }
-    [data-aos] {
-      opacity: 1 !important;
-      transform: none !important;
-      transition: none !important;
-    }
-    .page-title {
-      z-index: 1 !important;
-    }
-    #resultSection, #aiResult {
-  display: block !important;
-  opacity: 1 !important;
-  visibility: visible !important;
-}
+    [data-aos] { opacity: 1 !important; transform: none !important; }
 
+    /* ── Mode toggle tabs ─────────────────────────────────── */
+    .mode-tabs { display: flex; gap: 0; border-radius: 14px; overflow: hidden; border: 2px solid #1a4a3a; max-width: 420px; margin: 0 auto 36px; }
+    .mode-tab {
+      flex: 1; padding: 13px 20px; text-align: center; cursor: pointer;
+      font-weight: 600; font-size: 14px; letter-spacing: 0.04em;
+      background: #fff; color: #1a4a3a; border: none; transition: all 0.25s;
+    }
+    .mode-tab.active { background: #1a4a3a; color: #fff; }
+    .mode-tab i { margin-right: 6px; }
+
+    /* ── Upload dropzone ──────────────────────────────────── */
+    .upload-zone {
+      border: 2.5px dashed #c9a85c;
+      border-radius: 18px;
+      padding: 48px 24px;
+      text-align: center;
+      cursor: pointer;
+      background: #fffdf7;
+      transition: border-color 0.25s, background 0.25s;
+      position: relative;
+    }
+    .upload-zone:hover, .upload-zone.dragover {
+      border-color: #1a4a3a;
+      background: #f0f7f3;
+    }
+    .upload-zone input[type="file"] {
+      position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
+    }
+    .upload-icon { font-size: 3rem; color: #c9a85c; margin-bottom: 12px; display: block; }
+    .upload-zone h5 { color: #1a4a3a; font-family: 'DM Serif Display', serif; font-size: 1.2rem; margin-bottom: 6px; }
+    .upload-zone p  { color: #6e7d78; font-size: 0.88rem; margin: 0; }
+
+    /* ── Preview image ────────────────────────────────────── */
+    #photoPreviewWrap { display: none; margin-top: 20px; text-align: center; }
+    #photoPreview {
+      width: 180px; height: 180px; object-fit: cover;
+      border-radius: 50%; border: 4px solid #1a4a3a;
+      box-shadow: 0 8px 28px rgba(26,74,58,0.2);
+    }
+
+    /* ── Scan status bar ──────────────────────────────────── */
+    .scan-status {
+      display: none; margin-top: 20px;
+      background: #f0f7f3; border-radius: 12px; padding: 16px 20px;
+      border-left: 4px solid #1a4a3a;
+    }
+    .scan-status.error  { background: #fff0f0; border-left-color: #dc3545; }
+    .scan-status.offline { background: #fff8e6; border-left-color: #c9a85c; }
+
+    /* ── Confidence bars ──────────────────────────────────── */
+    .condition-bar { margin: 8px 0; }
+    .condition-bar .label {
+      display: flex; justify-content: space-between;
+      font-size: 13px; font-weight: 500; color: #3a3a3a; margin-bottom: 4px;
+      text-transform: capitalize;
+    }
+    .bar-track { background: #e8ede9; border-radius: 20px; height: 10px; overflow: hidden; }
+    .bar-fill  {
+      height: 100%; border-radius: 20px;
+      background: linear-gradient(90deg, #1a4a3a, #4caf88);
+      transition: width 1s ease;
+    }
+    .bar-fill.high   { background: linear-gradient(90deg, #c0392b, #e74c3c); }
+    .bar-fill.medium { background: linear-gradient(90deg, #c9a85c, #e8c97a); }
+
+    /* ── CNN offline notice ───────────────────────────────── */
+    .cnn-offline-notice {
+      background: linear-gradient(135deg, #fff8e6, #fef3cd);
+      border: 1.5px solid #c9a85c;
+      border-radius: 14px; padding: 20px 24px; margin-top: 16px;
+    }
+    .cnn-offline-notice h6 { color: #7a5a00; font-weight: 700; margin-bottom: 8px; }
+    .cnn-offline-notice code {
+      background: rgba(0,0,0,0.08); padding: 3px 8px; border-radius: 5px;
+      font-size: 12px; color: #3a3a3a;
+    }
   </style>
 </head>
 
 <body>
 
-  <!-- ======= Header ======= -->
+  <!-- ── Header ─────────────────────────────────────────────── -->
   <header id="header" class="header fixed-top bg-white shadow-sm">
-    <div class="container d-flex justify-content-between align-items-center">
-      <!-- <a href="index.html" class="logo text-decoration-none">
-        <h1 class="text-primary">DermaGuide</h1>
-      </a> -->
-      <nav class="nav">
+    <div class="container d-flex justify-content-between align-items-center py-2">
+      <a href="index.html" class="text-decoration-none d-flex align-items-center gap-2">
+        <img src="assets/img/logo.png" alt="DermaGuide" style="height:34px;">
+        <span style="font-family:'DM Serif Display',serif;font-size:1.25rem;color:#1a4a3a;">DermaGuide</span>
+      </a>
+      <nav class="d-flex gap-1 align-items-center">
         <a href="index.html" class="nav-link">Home</a>
         <a href="service-details.html" class="nav-link">Services</a>
-         <a href="blog.html" class="nav-link">Skin Care Tips</a>
-        <!-- <a href="starter-page.html" class="nav-link active">AI Analyzer</a> -->
-        <!-- <a href="contact.html" class="nav-link">Contact</a> -->
+        <a href="blog.html" class="nav-link">Skin Tips</a>
+        <a href="starter-page.html" class="nav-link fw-bold" style="color:#1a4a3a;">AI Analyzer</a>
       </nav>
     </div>
   </header>
 
-  <main class="main" style="margin-top:32px;">
+  <main class="main" style="margin-top:66px;">
 
-    <!-- ===== Hero Section ===== -->
-    <section id="hero" class="hero text-center text-white d-flex align-items-center justify-content-center" style="background: linear-gradient(135deg, #0d6efd, #007bff); height: 70vh;">
-      <div class="container">
-        <h1 class="fw-bold display-4 mb-3">AI-Powered Skin Analyzer</h1>
-        <p class="lead mb-4">Understand your skin and get personalized skincare advice in seconds.</p>
-        <a href="#skin-analyzer" class="btn btn-light btn-lg">Start Quiz</a>
+    <!-- ── Hero ───────────────────────────────────────────────── -->
+    <section id="hero" style="
+      background: linear-gradient(135deg, #0d3d2c 0%, #1a6644 60%, #c9a85c 130%);
+      min-height: 52vh; display: flex; align-items: center; justify-content: center;
+      text-align: center; position: relative; overflow: hidden; padding: 60px 20px;">
+      <div style="position:absolute;inset:0;opacity:0.05;background-image:radial-gradient(#fff 1px,transparent 1px);background-size:28px 28px;pointer-events:none;"></div>
+      <div class="container position-relative">
+        <div class="row justify-content-center">
+          <div class="col-lg-8">
+            <p style="font-size:11px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:rgba(201,168,92,0.9);margin-bottom:12px;">
+              TWO WAYS TO ANALYSE · AI-POWERED · FREE
+            </p>
+            <h1 style="font-family:'DM Serif Display',serif;font-size:clamp(2rem,5vw,3.2rem);color:#fff;margin-bottom:14px;text-shadow:0 2px 10px rgba(0,0,0,0.2);">
+              Know Your Skin.<br><em>Exactly.</em>
+            </h1>
+            <p style="color:rgba(255,255,255,0.82);font-size:1rem;max-width:480px;margin:0 auto 28px;line-height:1.75;">
+              Fill the quick quiz <strong>or</strong> upload a face photo for CNN-powered detection of acne, pigmentation, scarring, and more.
+            </p>
+            <a href="#skin-analyzer" class="btn btn-light btn-lg rounded-pill px-5 py-3 fw-bold shadow"
+               style="color:#1a4a3a;font-size:0.95rem;">
+              Get Started ↓
+            </a>
+          </div>
+        </div>
       </div>
     </section>
 
-    <!-- ===== Quiz Section ===== -->
-    <section id="skin-analyzer" class="py-5 bg-light">
+    <!-- ══════════════════════════════════════════════════════ -->
+    <!-- ── Analyzer Section ─────────────────────────────────── -->
+    <!-- ══════════════════════════════════════════════════════ -->
+    <section id="skin-analyzer" class="py-5" style="background:#f6f9f7;">
       <div class="container">
-        <div class="text-center mb-5">
-          <h2 class="fw-bold text-primary">Skin Concern Detection</h2>
-          <p class="text-muted">Get smart recommendations for your unique skin type.</p>
+
+        <div class="text-center mb-4">
+          <h2 style="font-family:'DM Serif Display',serif;font-size:clamp(1.6rem,3vw,2.1rem);color:#111c17;">
+            Choose Your Analysis Method
+          </h2>
+          <p style="color:#6e7d78;max-width:460px;margin:8px auto 28px;">
+            Use the quiz for general recommendations, or upload a photo for deep CNN skin detection.
+          </p>
+
+          <!-- ── Mode toggle ─────────────────────────────── -->
+          <div class="mode-tabs">
+            <button class="mode-tab active" id="tabQuiz" onclick="switchMode('quiz')">
+              <i class="bi bi-clipboard2-check"></i> Skin Quiz
+            </button>
+            <button class="mode-tab" id="tabScan" onclick="switchMode('scan')">
+              <i class="bi bi-camera"></i> Face Scan (CNN)
+            </button>
+          </div>
         </div>
 
-        <!-- Form -->
-        <form id="skinForm" class="p-4 shadow-lg rounded bg-white mx-auto" style="max-width:600px;">
-          <div class="mb-3">
-            <label for="skinType" class="form-label fw-semibold">Select your skin type:</label>
-            <select id="skinType" class="form-select" required>
-              <option value="">Choose...</option>
-              <option value="Oily">Oily</option>
-              <option value="Dry">Dry</option>
-              <option value="Combination">Combination</option>
-              <option value="Normal">Normal</option>
-              <option value="Sensitive">Sensitive</option>
-            </select>
+        <!-- ══════════════════════════════════════════════ -->
+        <!-- MODE 1: Text Quiz ──────────────────────────── -->
+        <!-- ══════════════════════════════════════════════ -->
+        <div id="modeQuiz">
+          <!-- Step indicator -->
+          <div class="step-indicators mb-3 text-center">
+            <span class="step-dot active"></span>
+            <span class="step-dot"></span>
+            <span class="step-dot"></span>
           </div>
 
-          <div class="mb-3">
-            <label for="skinConcern" class="form-label fw-semibold">Main skin concern:</label>
-            <select id="skinConcern" class="form-select" required>
-              <!-- <option value="">Choose...</option> -->
-                <option value="None" selected>Choose your concern...</option>
-              <option value="Acne">Acne</option>
-              <option value="Pigmentation">Pigmentation</option>
-              <option value="Wrinkles">Wrinkles / Aging</option>
-              <option value="Dullness">Dullness</option>
-              <option value="Dark Spots">Dark Spots</option>
-            </select>
+          <form id="skinForm" novalidate>
+
+            <!-- Step 1: Skin Type -->
+            <div class="quiz-step active-step">
+              <p class="text-center fw-semibold mb-3" style="color:#1a4a3a;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;">
+                Step 1 of 2 · Skin Type
+              </p>
+              <div class="mb-4">
+                <label for="skinType" class="form-label">What is your skin type?</label>
+                <select id="skinType" class="form-select" required>
+                  <option value="" selected disabled>Choose your skin type…</option>
+                  <option value="Oily">Oily — shiny, enlarged pores, prone to breakouts</option>
+                  <option value="Dry">Dry — tight, flaky, or rough feeling</option>
+                  <option value="Combination">Combination — oily T-zone, dry cheeks</option>
+                  <option value="Normal">Normal — balanced, few issues</option>
+                  <option value="Sensitive">Sensitive — easily irritated, reactive</option>
+                </select>
+              </div>
+              <div class="text-end">
+                <button type="button" class="btn-step-next btn" data-step-next>
+                  Next → Choose Concern
+                </button>
+              </div>
+            </div>
+
+            <!-- Step 2: Concern -->
+            <div class="quiz-step hidden-step">
+              <p class="text-center fw-semibold mb-3" style="color:#1a4a3a;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;">
+                Step 2 of 2 · Main Concern
+              </p>
+              <div class="mb-3">
+                <label for="skinConcern" class="form-label">What is your main skin concern?</label>
+                <select id="skinConcern" class="form-select" required>
+                  <option value="None" selected disabled>Choose your concern…</option>
+                  <option value="Acne">Acne — pimples, blackheads, whiteheads</option>
+                  <option value="Pigmentation">Pigmentation — uneven skin tone, melasma</option>
+                  <option value="Wrinkles">Wrinkles / Aging — fine lines, loss of firmness</option>
+                  <option value="Dullness">Dullness — lack of glow, tired-looking skin</option>
+                  <option value="Dark Spots">Dark Spots — post-acne marks, sun spots</option>
+                </select>
+              </div>
+              <div id="ingredientTip" style="display:none;"></div>
+              <div class="d-flex justify-content-between mt-4">
+                <button type="button" class="btn-step-back btn" data-step-back>← Back</button>
+                <button type="submit" class="btn-analyze btn">✨ Analyze My Skin</button>
+              </div>
+            </div>
+
+          </form>
+
+          <!-- Quiz results -->
+          <div id="resultSection" style="display:none;" class="mt-5">
+            <div id="aiResult"></div>
+          </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════════ -->
+        <!-- MODE 2: Face Scan (CNN) ────────────────────── -->
+        <!-- ══════════════════════════════════════════════ -->
+        <div id="modeScan" style="display:none;">
+          <div id="scanForm" style="background:#fff;border-radius:24px;padding:40px;box-shadow:0 16px 60px rgba(0,0,0,0.1);border-top:5px solid #c9a85c;max-width:620px;margin:0 auto;">
+
+            <h4 style="font-family:'DM Serif Display',serif;color:#111c17;margin-bottom:6px;text-align:center;">
+              CNN Face Scan
+            </h4>
+            <p style="color:#6e7d78;font-size:0.88rem;text-align:center;margin-bottom:24px;">
+              Upload a clear photo of your face. Our CNN model will detect acne, pigmentation, scars, dryness, and oiliness automatically.
+            </p>
+
+            <!-- Photo tips -->
+            <div style="background:#f0f7f3;border-radius:10px;padding:12px 16px;margin-bottom:20px;font-size:12.5px;color:#3a3a3a;line-height:1.7;">
+              📸 <strong>For best results:</strong> Face the camera directly · Use natural daylight · No filters or makeup · Plain background
+            </div>
+
+            <!-- Dropzone -->
+            <div class="upload-zone" id="uploadZone">
+              <input type="file" id="photoInput" accept="image/jpeg,image/png,image/webp" aria-label="Upload face photo">
+              <span class="upload-icon">🖼️</span>
+              <h5>Drag &amp; drop your photo here</h5>
+              <p>or click to browse · JPG, PNG, WEBP · Max 5 MB</p>
+            </div>
+
+            <!-- Preview -->
+            <div id="photoPreviewWrap">
+              <img id="photoPreview" src="" alt="Your photo preview">
+              <p style="color:#6e7d78;font-size:12px;margin-top:8px;">
+                <button onclick="clearPhoto()" style="background:none;border:none;color:#c0392b;font-size:12px;cursor:pointer;text-decoration:underline;">
+                  ✕ Remove photo
+                </button>
+              </p>
+            </div>
+
+            <!-- Scan button -->
+            <button id="scanBtn" onclick="runFaceScan()" disabled
+              style="width:100%;margin-top:20px;background:linear-gradient(135deg,#1a4a3a,#2d6a55);color:#fff;border:none;border-radius:12px;padding:14px;font-size:15px;font-weight:700;cursor:pointer;opacity:0.5;transition:opacity 0.25s;">
+              <i class="bi bi-camera-fill me-2"></i> Scan My Skin
+            </button>
+
+            <!-- Status / result -->
+            <div class="scan-status" id="scanStatus"></div>
+
           </div>
 
-          <div class="text-center">
-            <button type="submit" class="btn btn-primary px-4 py-2">Analyze My Skin</button>
-          </div>
-        </form>
+          <!-- CNN Scan Results -->
+          <div id="scanResultSection" style="display:none;" class="mt-5">
 
-        <!-- AI Result -->
-        <div id="resultSection" class="mt-5 text-center" style="display:none;">
-          <h4 class="text-success mb-3"></h4>
-          <div id="aiResult" class="p-3 bg-white border rounded shadow-sm"></div>
+            <!-- Condition confidence bars -->
+            <div id="conditionBars" style="background:#fff;border-radius:20px;padding:32px;box-shadow:0 4px 24px rgba(0,0,0,0.08);max-width:620px;margin:0 auto 32px;">
+              <h5 style="font-family:'DM Serif Display',serif;color:#111c17;margin-bottom:20px;">
+                🔬 Skin Condition Analysis
+              </h5>
+              <div id="barsContainer"></div>
+            </div>
+
+            <!-- Product recommendations from CNN -->
+            <div id="scanProductsWrap">
+              <div class="text-center mb-4">
+                <div class="result-badge">CNN Analysis Complete ✓</div>
+                <h3 style="font-family:'DM Serif Display',serif;margin-top:16px;color:#111c17;" id="scanResultTitle"></h3>
+              </div>
+              <div class="row" id="scanProducts"></div>
+              <div class="text-center mt-4">
+                <button onclick="clearScan()" class="btn btn-outline-secondary rounded-pill px-4 me-2">
+                  ↩ Scan Again
+                </button>
+                <a href="index.html#portfolio" class="btn btn-outline-primary rounded-pill px-4">
+                  Browse All Products
+                </a>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ── How It Works ───────────────────────────────────────── -->
+    <section class="py-5" style="background:#fff;">
+      <div class="container">
+        <div class="text-center mb-5">
+          <h3 style="font-family:'DM Serif Display',serif;color:#111c17;font-size:1.8rem;">How It Works</h3>
+        </div>
+        <div class="row text-center gy-4">
+          <div class="col-md-3">
+            <div style="font-size:2.2rem;margin-bottom:12px;">📋</div>
+            <h5 style="font-family:'DM Serif Display',serif;color:#1a4a3a;font-size:1rem;">Choose Method</h5>
+            <p style="color:#6e7d78;font-size:0.88rem;">Use the quiz for quick picks or Face Scan for deep CNN analysis.</p>
+          </div>
+          <div class="col-md-3">
+            <div style="font-size:2.2rem;margin-bottom:12px;">📸</div>
+            <h5 style="font-family:'DM Serif Display',serif;color:#1a4a3a;font-size:1rem;">Provide Input</h5>
+            <p style="color:#6e7d78;font-size:0.88rem;">Answer two questions or upload a clear face photo in natural light.</p>
+          </div>
+          <div class="col-md-3">
+            <div style="font-size:2.2rem;margin-bottom:12px;">🤖</div>
+            <h5 style="font-family:'DM Serif Display',serif;color:#1a4a3a;font-size:1rem;">AI Analyses</h5>
+            <p style="color:#6e7d78;font-size:0.88rem;">Our model detects acne, pigmentation, scarring, dryness, and oiliness.</p>
+          </div>
+          <div class="col-md-3">
+            <div style="font-size:2.2rem;margin-bottom:12px;">✨</div>
+            <h5 style="font-family:'DM Serif Display',serif;color:#1a4a3a;font-size:1rem;">Get Products</h5>
+            <p style="color:#6e7d78;font-size:0.88rem;">Receive curated, ingredient-matched products ready to shop instantly.</p>
+          </div>
         </div>
       </div>
     </section>
 
   </main>
 
-  <!-- ===== Footer ===== -->
-  <footer id="footer" class="footer text-light" style="background: linear-gradient(135deg, #0b0f1a, #1b2233); color: #e8f0f8; padding: 60px 0 30px 0;">
-
-  <div class="container footer-top">
-    <div class="row gy-4">
-      
-      <!-- About Section -->
-      <div class="col-lg-4 col-md-6 footer-about">
-        <a href="index.html" class="logo d-flex align-items-center mb-3 text-decoration-none">
-          <span class="sitename fw-bold" style="font-size: 1.6rem; color: #4dd0e1;">DermaGuide AI</span>
-        </a>
-        <p>
-          DermaGuide AI empowers users with intelligent skincare insights.  
-          From analyzing your skin type to recommending the perfect products —  
-          your skincare routine is now smarter, faster, and more personal.
-        </p>
-
-        <div class="footer-contact pt-3">
-          <p><strong>Address:</strong> GlowTech Labs, Wellness City</p>
-          <p><strong>Phone:</strong> +91 98012 34567</p>
-          <p><strong>Email:</strong> ai-support@dermaguide.ai</p>
-        </div>
-
-        <div class="social-links d-flex mt-3">
-          <a href="#" class="me-3 text-info"><i class="bi bi-linkedin"></i></a>
-          <a href="#" class="me-3 text-info"><i class="bi bi-twitter-x"></i></a>
-          <a href="#" class="me-3 text-info"><i class="bi bi-instagram"></i></a>
-        </div>
-      </div>
-
-      <!-- Quick Access -->
-      <div class="col-lg-3 col-md-6 footer-links">
-        <h4 class="fw-semibold text-info mb-3">Quick Access</h4>
-        <ul class="list-unstyled">
-          <li><a href="index.html" class="text-light text-decoration-none">Home</a></li>
-          <li><a href="service-details.html" class="text-light text-decoration-none">Services</a></li>
-          <li><a href="starter-page.html" class="text-light text-decoration-none">AI Analyzer</a></li>
-          <li><a href="portfolio-details.html" class="text-light text-decoration-none">Products</a></li>
-          <li><a href="contact.html" class="text-light text-decoration-none">Contact</a></li>
-        </ul>
-      </div>
-
-      <!-- AI Features -->
-      <div class="col-lg-3 col-md-6 footer-links">
-        <h4 class="fw-semibold text-info mb-3">AI Features</h4>
-        <ul class="list-unstyled">
-          <li><a href="starter-page.html" class="text-light text-decoration-none">Skin Concern Detection</a></li>
-          <li><a href="service-details.html" class="text-light text-decoration-none">Smart Routine Builder</a></li>
-          <li><a href="portfolio-details.html" class="text-light text-decoration-none">Product Recommendations</a></li>
-        </ul>
-      </div>
-
-      <!-- Newsletter -->
-      <div class="col-lg-2 col-md-6 footer-newsletter">
-        <h4 class="fw-semibold text-info mb-3">Stay in Touch</h4>
-        <p>Join our AI skincare community to receive personalized care updates.</p>
-        <form action="#" method="post" class="php-email-form mt-3">
-          <div class="d-flex flex-column gap-2">
-            <input type="email" name="email" class="form-control" placeholder="Your Email" required>
-            <button type="submit" class="btn btn-info text-white">Subscribe</button>
+  <!-- ── Footer ─────────────────────────────────────────────── -->
+  <footer id="footer" class="footer">
+    <div class="container footer-top">
+      <div class="row gy-4">
+        <div class="col-lg-4 col-md-6">
+          <a href="index.html" class="logo d-flex align-items-center mb-3 text-decoration-none">
+            <span class="sitename">DermaGuide AI</span>
+          </a>
+          <p>Empowering you with intelligent skincare insights. From skin type analysis to perfect product picks.</p>
+          <div class="social-links d-flex mt-3">
+            <a href="#" class="me-3"><i class="bi bi-linkedin"></i></a>
+            <a href="#" class="me-3"><i class="bi bi-twitter-x"></i></a>
+            <a href="#" class="me-3"><i class="bi bi-instagram"></i></a>
           </div>
-        </form>
+        </div>
+        <div class="col-lg-3 col-md-6">
+          <h4>Quick Access</h4>
+          <ul class="list-unstyled">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="service-details.html">Services</a></li>
+            <li><a href="starter-page.html">AI Analyzer</a></li>
+            <li><a href="blog.html">Skin Tips</a></li>
+            <li><a href="index.html#contact">Contact</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-3 col-md-6">
+          <h4>AI Features</h4>
+          <ul class="list-unstyled">
+            <li><a href="starter-page.html">Skin Concern Detection</a></li>
+            <li><a href="starter-page.html">CNN Face Scan</a></li>
+            <li><a href="index.html#portfolio">Product Recommendations</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-2 col-md-6">
+          <h4>Stay in Touch</h4>
+          <p>Join our skincare community.</p>
+          <form action="#" method="post" class="mt-3">
+            <div class="d-flex flex-column gap-2">
+              <input type="email" name="email" class="form-control" placeholder="Your Email" required>
+              <button type="submit" class="btn-info btn">Subscribe</button>
+            </div>
+          </form>
+        </div>
       </div>
-
     </div>
-  </div>
-
-  <!-- Copyright -->
-  <div class="container text-center mt-5">
-    <p class="mb-0">© 2025 <strong class="text-info">DermaGuide AI</strong> | Intelligent Skincare Solutions</p>
-    <small class="text-muted">Designed by <span style="color:#4dd0e1;">Aka</span></small>
-  </div>
-
-</footer>
-
+    <div class="container text-center mt-5">
+      <hr style="border-color:rgba(255,255,255,0.08);">
+      <p class="copyright mb-0">© 2025 <strong style="color:#c9a85c;">DermaGuide AI</strong> — Intelligent Skincare Solutions</p>
+    </div>
+  </footer>
 
   <!-- Vendor JS -->
-  <!-- <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="assets/vendor/aos/aos.js"></script>
-  <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
-  <script src="assets/vendor/swiper/swiper-bundle.min.js"></script> -->
+  <script>window.addEventListener('load', () => AOS.init({ duration: 600, once: true }));</script>
 
-  <!-- Main JS -->
-  <!-- <script src="assets/js/main.js"></script> -->
-   <!-- Vendor JS Files -->
-<script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-<script src="assets/vendor/aos/aos.js"></script>
-<script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
-<script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
-
-<!-- Your AI Analyzer Logic (main.js) -->
-<script src="assets/js/starter.js" defer></script>
-
+  <!-- Updated starter.js -->
+  <script src="assets/js/starter.js" defer></script>
 
 </body>
 </html>
