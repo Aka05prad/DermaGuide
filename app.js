@@ -217,6 +217,93 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+// ════════════════════════════════════════════════════════════
+// POST /api/chat — AI skincare chatbot using Claude
+// ════════════════════════════════════════════════════════════
+const OpenAI = require("openai");
+
+const groq = new OpenAI({
+
+  apiKey: process.env.GROQ_API_KEY,
+
+  baseURL: "https://api.groq.com/openai/v1"
+});
+app.post('/api/chat', async (req, res) => {
+
+  const { message, history } = req.body;
+
+  if (!message?.trim()) {
+
+    return res.status(400).json({
+      ok: false,
+      reply: 'Please enter a message.'
+    });
+  }
+
+  try {
+
+    // Build conversation history
+    const messages = [
+
+      {
+        role: "system",
+        content: `
+You are DermaBot, an AI skincare advisor.
+
+Rules:
+- Beginner-friendly skincare advice
+- Focus on Indian skin & climate
+- Suggest routines
+- Warn about ingredient conflicts
+- No prescription medicines
+- Suggest dermatologist for severe issues
+- Keep responses concise and warm
+`
+      },
+
+      ...(Array.isArray(history)
+        ? history
+        : []),
+
+      {
+        role: "user",
+        content: message
+      }
+    ];
+
+    // Call Groq AI
+    const completion =
+      await groq.chat.completions.create({
+
+        model: "llama-3.1-8b-instant",
+
+        messages,
+
+        temperature: 0.7,
+
+        max_tokens: 500
+      });
+
+    const reply =
+      completion.choices[0].message.content;
+
+    res.json({
+      ok: true,
+      reply
+    });
+
+  } catch (err) {
+
+    console.error("Groq API Error:", err);
+
+    res.status(500).json({
+      ok: false,
+      reply:
+        "DermaBot is currently unavailable."
+    });
+  }
+});
+
 // ── 404 for unknown API routes ────────────────────────────────
 app.use('/api/*path', (req, res) => {
   res.status(404).json({ ok: false, message: `API route ${req.originalUrl} not found.` });

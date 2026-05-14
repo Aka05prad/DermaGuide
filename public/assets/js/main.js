@@ -304,3 +304,116 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
+////////////////////////////////////
+
+// ════════════════════════════════════════════════════════════
+// DermaBot Chat Widget
+// ════════════════════════════════════════════════════════════
+let chatHistory = [];   // stores full conversation for multi-turn context
+let isBotTyping = false;
+
+function toggleChat() {
+  const box = document.getElementById('dermaChatBox');
+  box.classList.toggle('open');
+  if (box.classList.contains('open')) {
+    setTimeout(() => document.getElementById('chatInput')?.focus(), 300);
+  }
+}
+
+function sendSuggestion(text) {
+  // Hide suggestions after first use
+  const sugg = document.getElementById('chatSuggestions');
+  if (sugg) sugg.style.display = 'none';
+
+  document.getElementById('chatInput').value = text;
+  sendChat();
+}
+
+async function sendChat() {
+  const input = document.getElementById('chatInput');
+  const message = input.value.trim();
+  if (!message || isBotTyping) return;
+
+  input.value = '';
+  isBotTyping = true;
+
+  // Render user message
+  appendMessage('user', message);
+
+  // Show typing indicator
+  const typingId = showTyping();
+
+  try {
+    const res  = await fetch('/api/chat', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ message, history: chatHistory })
+    });
+    const data = await res.json();
+
+    removeTyping(typingId);
+
+    const reply = data.reply || 'Sorry, I could not process that. Please try again.';
+    appendMessage('bot', reply);
+
+    // Update history for next turn (keep last 10 messages to stay within token limit)
+    chatHistory.push({ role: 'user',      content: message });
+    chatHistory.push({ role: 'assistant', content: reply   });
+    if (chatHistory.length > 20) chatHistory = chatHistory.slice(-20);
+
+  } catch (err) {
+    removeTyping(typingId);
+    appendMessage('bot', '❌ Could not reach DermaBot. Make sure your server is running.');
+  }
+
+  isBotTyping = false;
+}
+
+function appendMessage(role, text) {
+  const container = document.getElementById('chatMessages');
+  if (!container) return;
+
+  const div = document.createElement('div');
+  div.className = `chat-msg ${role}`;
+
+  // Convert **bold** and newlines in bot responses for readability
+  const formatted = role === 'bot'
+    ? text
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\n/g, '<br>')
+    : escapeHtml(text);
+
+  div.innerHTML = `<div class="chat-bubble ${role}-bubble">${formatted}</div>`;
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+}
+
+function showTyping() {
+  const container = document.getElementById('chatMessages');
+  const id = 'typing-' + Date.now();
+  const div = document.createElement('div');
+  div.className = 'chat-msg bot';
+  div.id = id;
+  div.innerHTML = `
+    <div class="typing-bubble">
+      <div class="typing-dot"></div>
+      <div class="typing-dot"></div>
+      <div class="typing-dot"></div>
+    </div>`;
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+  return id;
+}
+
+function removeTyping(id) {
+  document.getElementById(id)?.remove();
+}
+
+function escapeHtml(text) {
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}

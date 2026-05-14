@@ -1,21 +1,37 @@
 {
-  "name": "dermagiude",
+  "name": "dermaguide",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "AI-powered skincare recommendation and analysis platform",
+  "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app.js",
+    "dev": "nodemon app.js"
   },
-  "keywords": [],
+  "keywords": [
+    "skincare",
+    "ai",
+    "chatbot",
+    "cnn",
+    "nodejs",
+    "express"
+  ],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "axios": "^1.16.0",
     "body-parser": "^2.2.0",
     "dotenv": "^17.4.2",
     "express": "^5.1.0",
     "mongoose": "^9.6.1",
-    "multer": "^2.1.1"
+    "multer": "^2.1.1",
+    "openai": "^6.37.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
   }
 }
