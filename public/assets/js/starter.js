@@ -290,7 +290,13 @@ async function runFaceScan() {
     console.error('Face scan error:', err);
     scanBtn.disabled  = false;
     scanBtn.innerHTML = '<i class="bi bi-camera-fill me-2"></i> Scan My Skin';
-    showScanStatus('Could not connect to server. Make sure node app.js is running.', 'error');
+    // showScanStatus('Could not connect to server. Make sure node app.js is running.', 'error');
+    
+if (err.message && err.message.includes('timeout')) {
+  showScanStatus('⏳ The AI service is waking up (free tier). Please wait 60 seconds and try again.', 'error');
+} else {
+  showScanStatus('Could not connect to server. Make sure node app.js is running.', 'error');
+}
   }
 }
 

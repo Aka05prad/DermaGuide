@@ -71,6 +71,19 @@ function recommendProducts({ skinType, concern, limit = 8 }) {
   return results.length > 0 ? results : LOCAL_PRODUCTS.slice(0, limit);
 }
 
+// Keep Flask CNN service awake on Render free tier
+// Add this anywhere after your routes, before app.listen
+if (process.env.NODE_ENV === 'production' && process.env.SKIN_ANALYZER_URL) {
+  setInterval(async () => {
+    try {
+      await axios.get(`${process.env.SKIN_ANALYZER_URL}/health`, { timeout: 10000 });
+      console.log('🏓 CNN service ping OK');
+    } catch (_) {
+      console.log('CNN service sleeping — will wake on next scan request');
+    }
+  }, 10 * 60 * 1000); // every 10 minutes
+}
+
 // ════════════════════════════════════════════════════════════
 // POST /api/recommend — quiz → product recommendations
 // ════════════════════════════════════════════════════════════
@@ -135,7 +148,8 @@ app.post('/api/analyze-skin', upload.single('photo'), async (req, res) => {
     const { data: skinResult } = await axios.post(
       `${SKIN_API}/analyze`,
       { image: imageBase64 },
-      { timeout: 30000 }
+      // { timeout: 30000 }
+      { timeout: 120000 }   // 2 minutes — enough for Render free tier to wake up
     );
 
     if (!skinResult.ok) {
