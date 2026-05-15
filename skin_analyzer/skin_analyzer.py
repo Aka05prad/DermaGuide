@@ -34,7 +34,8 @@ def analyze():
         data        = request.get_json()
         image_bytes = base64.b64decode(data['image'])
         processed   = preprocess_image(image_bytes)
-        predictions = model.predict(processed, verbose=0)[0]
+        # predictions = model.predict(processed, verbose=0)[0]
+        predictions = model(processed, training=False).numpy()[0]
 
         results = {
             labels[i]: round(float(predictions[i]) * 100, 1)
