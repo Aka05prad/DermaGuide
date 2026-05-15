@@ -507,23 +507,28 @@ function goToQuizWithHint(skinType, concern) {
 // SHARED HELPERS
 // ════════════════════════════════════════════════════════════
 
-// Build a product card HTML string
+// Build a product card — NO images (removed: caused flickering + broken URLs)
 function productCard(p) {
+  const categoryIcons = {
+    "Moisturizer": "💧", "Cleanser": "🫧", "Serum": "✨",
+    "Sunscreen": "☀️", "Treatment": "🔬", "Exfoliator": "🌿",
+    "Essence": "💎", "Body Lotion": "🧴", "Toner": "🌊",
+  };
+  const icon = categoryIcons[p.category] || "🛍️";
+
   return `
     <div class="col-lg-4 col-md-6 mb-4">
-      <div class="product-result-card card h-100 border-0">
-        <div class="product-img-wrap">
-          <img src="${p.image || 'assets/img/products/placeholder.jpg'}"
-               class="card-img-top" alt="${p.name}"
-               onerror="this.src='assets/img/products/placeholder.jpg'">
-          <span class="product-badge">${p.category || 'Skincare'}</span>
+      <div class="dg-product-card">
+        <div class="dg-card-top">
+          <span class="dg-card-icon">${icon}</span>
+          <span class="dg-card-badge">${p.category || "Skincare"}</span>
         </div>
-        <div class="card-body d-flex flex-column text-center p-4">
-          ${p.brand ? `<p class="brand-label mb-1">${p.brand}</p>` : ''}
-          <h5 class="card-title fw-semibold mb-2">${p.name}</h5>
-          <p class="card-text text-muted small flex-grow-1">${p.description || ''}</p>
-          ${p.price ? `<p class="product-price my-2">₹${p.price}</p>` : ''}
-          <a href="${p.buy_link || '#'}" target="_blank" rel="noopener" class="btn btn-dg mt-auto">
+        ${p.brand ? `<p class="dg-card-brand">${p.brand}</p>` : ""}
+        <h5 class="dg-card-name">${p.name}</h5>
+        <p class="dg-card-desc">${p.description || ""}</p>
+        <div class="dg-card-footer">
+          ${p.price ? `<span class="dg-card-price">₹${p.price}</span>` : "<span></span>"}
+          <a href="${p.buy_link || "#"}" target="_blank" rel="noopener" class="dg-shop-btn">
             Shop Now →
           </a>
         </div>
