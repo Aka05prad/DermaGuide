@@ -170,7 +170,8 @@ app.post('/api/analyze-skin', upload.single('photo'), async (req, res) => {
       });
     }
     console.error('Skin analysis error:', err.message);
-    res.status(500).json({ ok: false, message: 'Something went wrong.' });
+    // res.status(500).json({ ok: false, message: 'Something went wrong.' });
+    res.status(500).json({ ok: false, message: 'Something went wrong: ' + err.message });
   }
 });
 

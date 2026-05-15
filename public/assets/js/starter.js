@@ -507,28 +507,52 @@ function goToQuizWithHint(skinType, concern) {
 // SHARED HELPERS
 // ════════════════════════════════════════════════════════════
 
-// Build a product card — NO images (removed: caused flickering + broken URLs)
+// Build a product card HTML string
+// function productCard(p) {
+//   return `
+//     <div class="col-lg-4 col-md-6 mb-4">
+//       <div class="product-result-card card h-100 border-0">
+//         <div class="product-img-wrap">
+//           <img src="${p.image || 'assets/img/products/placeholder.jpg'}"
+//                class="card-img-top" alt="${p.name}"
+//                onerror="this.src='assets/img/products/placeholder.jpg'">
+//           <span class="product-badge">${p.category || 'Skincare'}</span>
+//         </div>
+//         <div class="card-body d-flex flex-column text-center p-4">
+//           ${p.brand ? `<p class="brand-label mb-1">${p.brand}</p>` : ''}
+//           <h5 class="card-title fw-semibold mb-2">${p.name}</h5>
+//           <p class="card-text text-muted small flex-grow-1">${p.description || ''}</p>
+//           ${p.price ? `<p class="product-price my-2">₹${p.price}</p>` : ''}
+//           <a href="${p.buy_link || '#'}" target="_blank" rel="noopener" class="btn btn-dg mt-auto">
+//             Shop Now →
+//           </a>
+//         </div>
+//       </div>
+//     </div>`;
+// }
+///////////////////////////////
 function productCard(p) {
-  const categoryIcons = {
-    "Moisturizer": "💧", "Cleanser": "🫧", "Serum": "✨",
-    "Sunscreen": "☀️", "Treatment": "🔬", "Exfoliator": "🌿",
-    "Essence": "💎", "Body Lotion": "🧴", "Toner": "🌊",
+  const icons = {
+    "Moisturizer":"💧","Cleanser":"🫧","Serum":"✨",
+    "Sunscreen":"☀️","Treatment":"🔬","Exfoliator":"🌿",
+    "Essence":"💎","Body Lotion":"🧴","Toner":"🌊"
   };
-  const icon = categoryIcons[p.category] || "🛍️";
-
+  const icon = icons[p.category] || "🛍️";
   return `
     <div class="col-lg-4 col-md-6 mb-4">
       <div class="dg-product-card">
-        <div class="dg-card-top">
-          <span class="dg-card-icon">${icon}</span>
-          <span class="dg-card-badge">${p.category || "Skincare"}</span>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+          <span style="font-size:2rem;">${icon}</span>
+          <span style="font-size:11px;font-weight:700;text-transform:uppercase;background:#f0f7f3;color:#1a4a3a;padding:4px 12px;border-radius:20px;border:1px solid #c3ddd3;">${p.category || "Skincare"}</span>
         </div>
-        ${p.brand ? `<p class="dg-card-brand">${p.brand}</p>` : ""}
-        <h5 class="dg-card-name">${p.name}</h5>
-        <p class="dg-card-desc">${p.description || ""}</p>
-        <div class="dg-card-footer">
-          ${p.price ? `<span class="dg-card-price">₹${p.price}</span>` : "<span></span>"}
-          <a href="${p.buy_link || "#"}" target="_blank" rel="noopener" class="dg-shop-btn">
+        ${p.brand ? `<p style="font-size:11px;font-weight:700;text-transform:uppercase;color:#4caf88;margin:0 0 6px;">${p.brand}</p>` : ""}
+        <h5 style="font-family:'DM Serif Display',serif;font-size:1rem;color:#111c17;margin:0 0 10px;line-height:1.35;">${p.name}</h5>
+        <p style="font-size:0.85rem;color:#6e7d78;line-height:1.65;flex-grow:1;margin:0 0 16px;">${p.description || ""}</p>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:auto;gap:10px;">
+          ${p.price ? `<span style="font-family:'DM Serif Display',serif;font-size:1.1rem;color:#1a4a3a;font-weight:700;">₹${p.price}</span>` : "<span></span>"}
+          <a href="${p.buy_link || "#"}" target="_blank" rel="noopener"
+             style="background:#1a4a3a;color:#fff;border-radius:40px;padding:9px 20px;font-size:13px;font-weight:700;text-decoration:none;white-space:nowrap;transition:background 0.2s;"
+             onmouseover="this.style.background='#2d6a55'" onmouseout="this.style.background='#1a4a3a'">
             Shop Now →
           </a>
         </div>
@@ -571,3 +595,4 @@ function resetQuiz() {
     behavior: 'smooth'
   });
 }
+
