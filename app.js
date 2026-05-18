@@ -233,7 +233,7 @@ app.get('/api/health', (req, res) => {
 });
 
 // ════════════════════════════════════════════════════════════
-// POST /api/chat — AI skincare chatbot using Claude
+// POST /api/chat — AI skincare chatbot using Groq
 // ════════════════════════════════════════════════════════════
 const OpenAI = require("openai");
 
